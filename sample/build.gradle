@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+    defaultConfig {
+        applicationId 'com.scottyab.safetynet.sample'
+        minSdkVersion 10
+        targetSdkVersion 22
+        versionCode 1
+        versionName "0.1"
+    }
+
+
+    signingConfigs {
+        //from gradle.properties
+        release {
+            storeFile file(SAFETY_NET_FILE)
+            keyAlias SAFETY_NET_KEY
+            storePassword SAFETY_NET_STORE_PASS
+            keyPassword SAFETY_NET_KEY_PASS
+        }
+    }
+
+    buildTypes {
+        debug{
+            buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + SAFETY_NET_DEVICE_VERIFICATION_API_KEY +"\"")
+            minifyEnabled false
+            applicationIdSuffix ".debug"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            //buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", '"AIzaSyATMqwT6E0ndqZa43uQNhFOWjQi9RoVQIc"')
+            buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + SAFETY_NET_DEVICE_VERIFICATION_API_KEY +"\"")
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':safetynetlib')
+    compile 'com.android.support:appcompat-v7:22.1.1'
+}
