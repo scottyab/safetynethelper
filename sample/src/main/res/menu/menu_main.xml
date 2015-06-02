@@ -13,4 +13,8 @@
           android:icon="@android:drawable/ic_menu_share"
           android:orderInCategory="10"
           app:showAsAction="always"/>
+
+      <item android:id="@+id/action_github"
+            android:title="@string/action_github"
+            app:showAsAction="never"/>
 </menu>

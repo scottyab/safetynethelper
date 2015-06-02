@@ -1,35 +1,120 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/pageContainer"
+        >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:orientation="vertical"
-                tools:context=".MainActivity">
-
-    <Button
+        <Button
         android:id="@+id/runTestButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Run SafetyNet test"/>
 
+<LinearLayout
+                android:id="@+id/resultsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:background="@color/pass"
+                android:animateLayoutChanges="true"
+                tools:context=".MainActivity">
+
     <TextView
         android:id="@+id/results"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+
+    <ImageView
+        android:id="@+id/resultIcon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp" android:layout_weight="1"
+        android:layout_gravity="top|center_horizontal"
+        tools:src="@drawable/pass"
+        />
+
+    <ScrollView
+        android:id="@+id/sucessResultsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:fillViewport="true"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:padding="4dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+            android:gravity="center_horizontal"
+            android:text="Request token" />
+        <TextView
+            android:id="@+id/nonce"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            tools:text="egijerogjeogjoierjgoiej"
+            />
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Timestamp" />
+        <TextView
+            android:id="@+id/timestamp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="49865416845212"
+            />
+
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Package name" />
+        <TextView
+            android:id="@+id/packagename"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="com.scottyab.safetynet.sample"
+            />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
-
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/loading"

@@ -1,46 +1,63 @@
 package com.scottyab.sateynet.sample;
 
-import android.content.Context;
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.scottyab.safetynet.SafetyNetHelper;
+import com.scottyab.safetynet.SafetyNetResponse;
+import com.scottyab.safetynet.Utils;
 import com.scottyab.safetynet.sample.BuildConfig;
 import com.scottyab.safetynet.sample.R;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "SafetyNetHelperSAMPLE";
-    private TextView resultsTV;
 
-
-    //REPLACE with your own!!
+    //*** REPLACE with your own!! ***
     private static final String API_KEY = BuildConfig.GOOGLE_VERIFICATION_API_KEY;
     private View loading;
     private AlertDialog infoDialog;
 
     final SafetyNetHelper safetyNetHelper = new SafetyNetHelper(API_KEY);
+
+    private TextView resultsTV;
+    private TextView nonceTV;
+    private TextView timestampTV;
+    private View resultsContainer;
+    private ImageView resultsIcon;
+    private boolean hasAnimated =false;
+    private View sucessResultsContainer;
+    private TextView packagenameTV;
 
 
     @Override
@@ -48,10 +65,24 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d(TAG, "AndroidAPIKEY: " + getSigningKeyFingerprint(this) + ";" + getPackageName());
+        Log.d(TAG, "AndroidAPIKEY: " + Utils.getSigningKeyFingerprint(this) + ";" + getPackageName());
 
+        initViews();
+
+        if(ConnectionResult.SUCCESS != GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)){
+            handleError(0, "GooglePlayServices is not availible on this device.\n\nThis SafetyNet test will not work");
+        }
+    }
+
+    private void initViews() {
         resultsTV = (TextView)findViewById(R.id.results);
+        nonceTV = (TextView)findViewById(R.id.nonce);
+        timestampTV = (TextView)findViewById(R.id.timestamp);
+        packagenameTV = (TextView)findViewById(R.id.packagename);
+        resultsContainer = findViewById(R.id.resultsContainer);
+        sucessResultsContainer = findViewById(R.id.sucessResultsContainer);
         loading = findViewById(R.id.loading);
+        resultsIcon = (ImageView) findViewById(R.id.resultIcon);
 
         findViewById(R.id.runTestButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,37 +90,116 @@ public class MainActivity extends ActionBarActivity {
                 runTest();
             }
         });
-
-        if(ConnectionResult.SUCCESS != GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)){
-            resultsTV.setText("GooglePlayServices is not availible on this device.\n\nThis SafetyNet test will not work");
-        }
     }
 
     private void runTest() {
-
-        loading.setVisibility(View.VISIBLE);
+        showLoading(true);
 
         Log.d(TAG, "SafetyNet start request");
          safetyNetHelper.requestTest(this, new SafetyNetHelper.SafetyNetWrapperCallback() {
              @Override
-             public void error(int errorCode, String s) {
-                 Log.e(TAG, s);
-                 resultsTV.setText(s);
-                 loading.setVisibility(View.GONE);
+             public void error(int errorCode, String errorMessage) {
+                 showLoading(false);
+                 handleError(errorCode, errorMessage);
              }
 
              @Override
              public void success(boolean ctsProfileMatch) {
                  Log.d(TAG, "SafetyNet req success: ctsProfileMatch:" + ctsProfileMatch);
-                 resultsTV.setText("SafetyNet request and validation success: \n\n" + safetyNetHelper.getLastResponse().toString());
-                 loading.setVisibility(View.GONE);
+                 showLoading(false);
+                 updateUIWithSucessfulResult(safetyNetHelper.getLastResponse());
+
              }
          });
     }
 
+    private void handleError(int errorCode, String errorMsg) {
+        Log.e(TAG, errorMsg);
+
+        StringBuilder b=new StringBuilder();
+
+        switch(errorCode){
+            default:
+            case SafetyNetHelper.SAFTYNET_API_REQUEST_UNSUCCESSFUL:
+                b.append("SafetyNet request: fail\n");
+                break;
+            case SafetyNetHelper.RESPONSE_ERROR_VALIDATING_SIGNATURE:
+                b.append("SafetyNet request: success\n");
+                b.append("Response signature validation: error\n");
+                break;
+            case SafetyNetHelper.RESPONSE_FAILED_SIGNATURE_VALIDATION:
+                b.append("SafetyNet request: success\n");
+                b.append("Response signature validation: fail\n");
+                break;
+            case SafetyNetHelper.RESPONSE_VALIDATION_FAILED:
+                b.append("SafetyNet request: success\n");
+                b.append("Response validation: fail\n");
+                break;
+        }
+        resultsTV.setText(b.toString() + "\nError Msg:\n" + errorMsg);
+
+        resultsIcon.setImageResource(R.drawable.problem);
+        sucessResultsContainer.setVisibility(View.GONE);
+        revealResults(getResources().getColor(R.color.problem));
+    }
+
+    private void showLoading(boolean show) {
+        loading.setVisibility(show ? View.VISIBLE : View.GONE);
+        if(show) {
+            resultsContainer.setBackgroundColor(Color.TRANSPARENT);
+            resultsContainer.setVisibility(View.GONE);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void revealResults(Integer colorTo){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+            doPropertyAnimatorReveal(colorTo);
+            resultsContainer.setVisibility(View.VISIBLE);
+        }else{
+            resultsContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void doPropertyAnimatorReveal(Integer colorTo) {
+        Integer colorFrom = Color.TRANSPARENT;
+        Drawable background = resultsContainer.getBackground();
+        if (background instanceof ColorDrawable){
+            colorFrom = ((ColorDrawable) background).getColor();
+        }
+
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(500);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                resultsContainer.setBackgroundColor((Integer) animator.getAnimatedValue());
+            }
+
+        });
+        colorAnimation.start();
+    }
+
+    private void updateUIWithSucessfulResult(SafetyNetResponse safetyNetResponse) {
+        resultsTV.setText("SafetyNet request: success \nResponse validation: success\nCTS profile match: "+ (safetyNetResponse.isCtsProfileMatch() ? "true" : "false"));
+
+        sucessResultsContainer.setVisibility(View.VISIBLE);
+
+        nonceTV.setText(safetyNetResponse.getNonce());
+
+        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
+        Date timeOfResponse = new Date(safetyNetResponse.getTimestampMs());
+        timestampTV.setText(sim.format(timeOfResponse));
+        packagenameTV.setText(safetyNetResponse.getApkPackageName());
+
+        resultsIcon.setImageResource(safetyNetResponse.isCtsProfileMatch() ? R.drawable.pass : R.drawable.fail);
+
+        revealResults(getResources().getColor(safetyNetResponse.isCtsProfileMatch() ? R.color.pass : R.color.fail));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -104,6 +214,9 @@ public class MainActivity extends ActionBarActivity {
         }else if (id == R.id.action_sharee){
             shareTestResults();
             return true;
+        }else if (id == R.id.action_github){
+            openGithubProjectPage();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -111,12 +224,17 @@ public class MainActivity extends ActionBarActivity {
 
     private void shareTestResults() {
         if (safetyNetHelper.getLastResponse() != null){
-            String body = "SafetyNet request and validation success: \n\n" + safetyNetHelper.getLastResponse().toString();
+            String body = safetyNetHelper.getLastResponse().toString();
             Intent shareIntent = newEmailIntent(null, getString(R.string.app_name) + " " + getAppVersion(), body, false);
             startActivity(Intent.createChooser(shareIntent, "Share via..."));
         }else{
             Toast.makeText(this, "No tests results to share", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void openGithubProjectPage(){
+        startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://github.com/scottyab/safetynethelper/")));
     }
 
     private void showInfoDialog() {
@@ -131,6 +249,14 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("More info", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("https://developer.android.com/training/safetynet")));
                         }
                     })
                     .create();
@@ -158,41 +284,6 @@ public class MainActivity extends ActionBarActivity {
 
 
         return intent;
-    }
-
-
-    public static String getSigningKeyFingerprint(Context ctx) {
-        String result = null;
-        try {
-            PackageManager pm = ctx.getPackageManager();
-            String packageName = ctx.getPackageName();
-            int flags = PackageManager.GET_SIGNATURES;
-            PackageInfo packageInfo = pm.getPackageInfo(packageName, flags);
-            Signature[] signatures = packageInfo.signatures;
-            byte[] cert = signatures[0].toByteArray();
-            InputStream input = new ByteArrayInputStream(cert);
-            CertificateFactory cf = CertificateFactory.getInstance("X509");
-            X509Certificate c = (X509Certificate) cf.generateCertificate(input);
-            MessageDigest md = MessageDigest.getInstance("SHA1");
-            byte[] publicKey = md.digest(c.getEncoded());
-            result = byte2HexFormatted(publicKey);
-        } catch (Exception e) {
-            Log.w(TAG, e);
-        }
-        return result;
-    }
-
-    private static String byte2HexFormatted(byte[] arr) {
-        StringBuilder str = new StringBuilder(arr.length * 2);
-        for (int i = 0; i < arr.length; i++) {
-            String h = Integer.toHexString(arr[i]);
-            int l = h.length();
-            if (l == 1) h = "0" + h;
-            if (l > 2) h = h.substring(l - 2, l);
-            str.append(h.toUpperCase());
-            if (i < (arr.length - 1)) str.append(':');
-        }
-        return str.toString();
     }
 
     private String getAppVersion() {
