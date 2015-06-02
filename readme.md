@@ -63,7 +63,7 @@ This library is not _yet_ released in Maven Central, until then you can add as a
 
 add remote maven url
 
-```json
+```gradle
 
     repositories {
         maven {
@@ -74,7 +74,7 @@ add remote maven url
     
 then add a library dependency
 
-```json
+```gradle
 
     dependencies {
         compile 'com.github.scottyab:SafetyNet:0.1.0@aar'
