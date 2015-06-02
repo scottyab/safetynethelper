@@ -77,7 +77,7 @@ then add a library dependency
 ```gradle
 
     dependencies {
-        compile 'com.github.scottyab:SafetyNet:0.1.0@aar'
+        compile 'com.github.scottyab:safetynethelper:0.1.0'
     }
 ```
 
