@@ -86,7 +86,7 @@ public class AndroidDeviceVerifier {
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            Log.d(TAG, "signatureToVerify:" + signatureToVerify);
+            //Log.d(TAG, "signatureToVerify:" + signatureToVerify);
 
             try {
                 URL verifyApiUrl = new URL(GOOGLE_VERIFICATION_URL + apiKey);
@@ -123,7 +123,7 @@ public class AndroidDeviceVerifier {
                     return responseRoot.getBoolean("isValidSignature");
                 }
             }catch (Exception e){
-                //something went wrong requesting validation of the
+                //something went wrong requesting validation of the JWS Message
                 error = e;
                 Log.e(TAG, "problem validating JWS Message :" + e.getMessage(), e);
                 return false;

@@ -79,13 +79,16 @@ public class SafetyNetResponse {
 
     /**
      * Parse the JSON string into populated SafetyNetResponse object
-     * @param deocdedJWTPayload JSON String (always a json string according to JWT spec)
+     * @param decodedJWTPayload JSON String (always a json string according to JWT spec)
      * @return populated SafetyNetResponse
      */
-    public static @Nullable SafetyNetResponse parse(@NonNull String deocdedJWTPayload) {
+    public static @Nullable SafetyNetResponse parse(@NonNull String decodedJWTPayload) {
+
+        //Log.d(TAG, "decodedJWTPayload json:" +decodedJWTPayload);
+
         SafetyNetResponse response = new SafetyNetResponse();
         try {
-            JSONObject root = new JSONObject(deocdedJWTPayload);
+            JSONObject root = new JSONObject(decodedJWTPayload);
             if(root.has("nonce")) {
                 response.nonce = root.getString("nonce");
             }
@@ -112,7 +115,7 @@ public class SafetyNetResponse {
 
             return response;
         } catch (JSONException e) {
-            Log.e(TAG, "problem parsing deocdedJWTPayload:"+ e.getMessage(), e);
+            Log.e(TAG, "problem parsing decodedJWTPayload:"+ e.getMessage(), e);
         }
         return null;
     }
