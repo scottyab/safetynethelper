@@ -25,9 +25,9 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 
 ## Requires
 
-* Google Play services 7+ 
+* Google Play services 7+ ( speficially the safetynet api 'com.google.android.gms:play-services-safetynet:7.+')
 * Requires Internet permission
-* API key for the Android Device Verification API 
+* Google API key for the [Android Device Verification API](https://developer.android.com/training/safetynet/index.html#verify-compat-check) 
 
 
 
@@ -36,6 +36,7 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 You'll need to get a API key from the Google developer console to allow you to verify with the Android Device Verification API (in the sample project this is set via a BuildConfig field to keep my api key out of Github)
 
 ```java
+
     final SafetyNetHelper safetyNetHelper = new SafetyNetHelper(API_KEY);
     
     safetyNetHelper.requestTest(context, new SafetyNetHelper.SafetyNetWrapperCallback() {
@@ -63,6 +64,7 @@ This library is not _yet_ released in Maven Central, until then you can add as a
 add remote maven url
 
 ```json
+
     repositories {
         maven {
             url "https://jitpack.io"
@@ -73,6 +75,7 @@ add remote maven url
 then add a library dependency
 
 ```json
+
     dependencies {
         compile 'com.github.scottyab:SafetyNet:0.1.0@aar'
     }
