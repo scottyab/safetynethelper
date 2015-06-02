@@ -27,13 +27,13 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 
 * Google Play services 7+ 
 * Requires Internet permission
-* API key for the Android Device Verification API (in the sample project this is set via a BuildConfig field to keep my api out of github)
+* API key for the Android Device Verification API 
 
 
 
 ## How to use
 
-You'll need to get a API key from the Google developer console to allow you to verifiy with the Android Device Verification API
+You'll need to get a API key from the Google developer console to allow you to verifiy with the Android Device Verification API (in the sample project this is set via a BuildConfig field to keep my api key out of github)
 
 ```java
     final SafetyNetHelper safetyNetHelper = new SafetyNetHelper(API_KEY);

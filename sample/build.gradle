@@ -23,12 +23,12 @@ android {
     }
 
     buildTypes {
-        debug{
-            buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + SAFETY_NET_DEVICE_VERIFICATION_API_KEY +"\"")
-            minifyEnabled false
-            applicationIdSuffix ".debug"
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+            debug{
+                buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + SAFETY_NET_DEVICE_VERIFICATION_API_KEY +"\"")
+                minifyEnabled false
+                applicationIdSuffix ".debug"
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
         release {
             //buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", '"AIzaSyATMqwT6E0ndqZa43uQNhFOWjQi9RoVQIc"')
             buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + SAFETY_NET_DEVICE_VERIFICATION_API_KEY +"\"")

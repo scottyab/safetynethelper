@@ -8,7 +8,7 @@ android {
         minSdkVersion 10
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "0.1"
     }
     buildTypes {
         release {
@@ -24,8 +24,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //compile 'com.google.android.gms:play-services:7.3.0'
-    //now google play services is more granual
     compile 'com.google.android.gms:play-services-safetynet:7.3.0'
-    //compile 'com.google.code.gson:gson:2.3.1'
 }
