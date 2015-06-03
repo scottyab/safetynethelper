@@ -62,7 +62,7 @@ public class AndroidDeviceVerifier {
 
     /**
      * Provide the trust managers for the URL connection. By Default this uses the system defaults plus the GoogleApisTrustManager (SSL pinning)
-     * @return
+     * @return array of TrustManager including system defaults plus the GoogleApisTrustManager (SSL pinning)
      * @throws KeyStoreException
      * @throws NoSuchAlgorithmException
      */
