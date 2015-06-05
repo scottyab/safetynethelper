@@ -87,7 +87,7 @@ then add a library dependency
 
 ## Sample App
 
-The sample app illustrates the helper library in practice. Test your own devices today. It's available on the [playstore](https://play.google.com/store/apps/details?id=com.scottyab.safetynet.sample]). 
+The sample app illustrates the helper library in practice. Test your own devices today. It's available on the [playstore](https://play.google.com/store/apps/details?id=com.scottyab.safetynet.sample). 
 
 <img width="270" src="./art/sample_req_pass_cts_pass.png"> 
 <br>
