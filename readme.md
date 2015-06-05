@@ -61,6 +61,9 @@ You'll need to get a API key from the Google developer console to allow you to v
 
 This library is not _yet_ released in Maven Central, until then you can add as a library module or use [JitPack.io](https://jitpack.io)
 
+** UPDATE Fri 5th June 2015: this isn't working currently, I'll publish to maven central ASAP**
+
+
 add remote maven url
 
 ```gradle
