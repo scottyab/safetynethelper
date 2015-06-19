@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateFactory;
@@ -81,6 +82,8 @@ public class Utils {
         return result;
     }
 
+
+
     /**
      * Gets the encoded representation of the first signing cerificated used to sign current APK
      * @param ctx
@@ -101,6 +104,7 @@ public class Utils {
                 CertificateFactory cf = CertificateFactory.getInstance("X509");
                 X509Certificate c = (X509Certificate) cf.generateCertificate(input);
                 return c.getEncoded();
+
             }
         } catch (Exception e) {
             Log.w(TAG, e);
@@ -121,17 +125,34 @@ public class Utils {
         return str.toString();
     }
 
-    public static String calcApkCertificateDigest(final Context context) {
-        byte[] certificate = getSigningKeyCertificate(context);
-        byte[] hashed = hash(certificate);
-        return Base64.encodeToString(hashed, Base64.DEFAULT);
+    public static String[] calcApkCertificateDigests(final Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+            Signature[] signatures = packageInfo.signatures;
+            String[] certDigests = new String[signatures.length];
+            for (int i = 0; i < signatures.length; i++) {
+                byte[] cert = signatures[i].toByteArray();
+
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                md.update(cert, 0, cert.length);
+                certDigests[i]=Base64.encodeToString(cert, Base64.NO_WRAP);
+            }
+            return certDigests;
+        }catch (Exception e){
+            //this is just a test
+            e.printStackTrace();
+        }
+        return null;
+        //
+        //byte[] certificate = getSigningKeyCertificate(context);
+        //byte[] hashed = hash(certificate);
     }
 
 
     public static String calcApkDigest(final Context context) {
-        long checksum = getApkFileChecksum(context);
-        byte[] hashed = hash(checksum+"");
-        return Base64.encodeToString(hashed, Base64.DEFAULT);
+        byte[] hashed2 = getApkFileDigest(context);
+        String encoded2 = Base64.encodeToString(hashed2, Base64.NO_WRAP);
+        return encoded2;
     }
 
     private static long getApkFileChecksum(Context context) {
@@ -149,6 +170,34 @@ public class Utils {
             e.printStackTrace();
         }
         return chksum;
+    }
+
+
+    private static byte[] getApkFileDigest(Context context) {
+        String apkPath = context.getPackageCodePath();
+        try {
+            return getDigest(new FileInputStream(apkPath), "SHA-256");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return null;
+    }
+
+    public static final int BUFFER_SIZE = 2048;
+
+    public static byte[] getDigest(InputStream in, String algorithm) throws Throwable {
+        MessageDigest md = MessageDigest.getInstance(algorithm);
+        try {
+            DigestInputStream dis = new DigestInputStream(in, md);
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while (dis.read(buffer) != -1) {
+                //
+            }
+            dis.close();
+        } finally {
+            in.close();
+        }
+        return md.digest();
     }
 
 

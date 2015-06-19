@@ -16,6 +16,7 @@ import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 
 /**
@@ -51,8 +52,8 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     private String packageName;
 
     //not used currently
-    //private String apkCertificateDigest;
-    //private String apkDigest;
+    private String[] apkCertificateDigests;
+    private String apkDigest;
 
 
     private SafetyNetWrapperCallback callback;
@@ -101,10 +102,10 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         callback = safetyNetWrapperCallback;
 
         //commented out for now as cannot recreate the values Google play services is using
-        //apkCertificateDigest = Utils.calcApkCertificateDigest(context);
-        //Log.d(TAG, "apkCertificateDigest:"+apkCertificateDigest);
-        //apkDigest = Utils.calcApkDigest(context);
-        //Log.d(TAG, "apkDigest:"+apkDigest);
+        apkCertificateDigests = Utils.calcApkCertificateDigests(context);
+        Log.d(TAG, "apkCertificateDigests:"+ Arrays.asList(apkCertificateDigests));
+        apkDigest = Utils.calcApkDigest(context);
+        Log.d(TAG, "apkDigest:"+apkDigest);
     }
 
     @Override
@@ -198,24 +199,22 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         long durationOfReq = response.getTimestampMs()-requestTimestamp;
         if(durationOfReq>MAX_TIMESTAMP_DURATION){
             Log.e(TAG, "Duration calculated from the timestamp of response \""+durationOfReq +" \" exceeds permitted duration of \"" + MAX_TIMESTAMP_DURATION + "\"");
+            return false;
         }
 
-
-        /*
-         * This is commented out as couldn't recreate the ApkCertificateDigest or ApkDigest, need more info on how these are constructed.
-
-        if (!apkCertificateDigest.equals(response.getApkCertificateDigestSha256())){
-            Log.e(TAG, "invalid apkCertificateDigest, expected = \"" + apkCertificateDigest + "\"");
-            Log.e(TAG, "invalid apkCertificateDigest, response = \"" + response.getApkCertificateDigestSha256() + "\"");
-            return false;
+        //This is commented out as couldn't recreate the ApkCertificateDigest need more info on how these are constructed.
+        if (!Arrays.equals(apkCertificateDigests,  response.getApkCertificateDigestSha256())){
+            Log.e(TAG, "invalid apkCertificateDigest, local/expected = " + Arrays.asList(apkCertificateDigests));
+            Log.e(TAG, "invalid apkCertificateDigest, response = " +  Arrays.asList(response.getApkCertificateDigestSha256()));
+//            return false;
         }
 
         if (!apkDigest.equals(response.getApkDigestSha256())){
-            Log.e(TAG, "invalid ApkDigest, expected = \"" + apkDigest + "\"");
+            Log.e(TAG, "invalid ApkDigest, local/expected = \"" + apkDigest + "\"");
             Log.e(TAG, "invalid ApkDigest, response = \"" + response.getApkDigestSha256() + "\"");
             return false;
         }
-        */
+
         return true;
     }
 

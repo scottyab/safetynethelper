@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +34,7 @@ public class SafetyNetResponse {
     private String nonce;
     private long timestampMs;
     private String apkPackageName;
-    private String apkCertificateDigestSha256;
+    private String[] apkCertificateDigestSha256;
     private String apkDigestSha256;
     private boolean ctsProfileMatch;
 
@@ -60,7 +61,7 @@ public class SafetyNetResponse {
      *
      * @return BASE64 encoded
      */
-    public String getApkCertificateDigestSha256() {
+    public String[] getApkCertificateDigestSha256() {
         return apkCertificateDigestSha256;
     }
 
@@ -84,7 +85,7 @@ public class SafetyNetResponse {
      */
     public static @Nullable SafetyNetResponse parse(@NonNull String decodedJWTPayload) {
 
-        //Log.d(TAG, "decodedJWTPayload json:" +decodedJWTPayload);
+        Log.d(TAG, "decodedJWTPayload json:" +decodedJWTPayload);
 
         SafetyNetResponse response = new SafetyNetResponse();
         try {
@@ -94,7 +95,14 @@ public class SafetyNetResponse {
             }
 
             if(root.has("apkCertificateDigestSha256")) {
-                response.apkCertificateDigestSha256 = root.getString("apkCertificateDigestSha256");
+                JSONArray jsonArray = root.getJSONArray("apkCertificateDigestSha256");
+                if(jsonArray!=null){
+                    String[] certDigests = new String[jsonArray.length()];
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        certDigests[i]=jsonArray.getString(i);
+                    }
+                    response.apkCertificateDigestSha256 = certDigests;
+                }
             }
 
             if(root.has("apkDigestSha256")) {
