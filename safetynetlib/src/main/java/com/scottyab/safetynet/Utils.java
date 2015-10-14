@@ -135,7 +135,7 @@ public class Utils {
 
                 MessageDigest md = MessageDigest.getInstance("SHA-256");
                 md.update(cert, 0, cert.length);
-                certDigests[i]=Base64.encodeToString(cert, Base64.NO_WRAP);
+                certDigests[i]=Base64.encodeToString(md.digest(), Base64.NO_WRAP);
             }
             return certDigests;
         }catch (Exception e){
