@@ -15,6 +15,7 @@ android {
         targetSdkVersion 23
         versionCode 3
         versionName "0.3"
+
     }
 
     //check if SAFETY_NET_DEVICE_VERIFICATION_API_KEY is defined in gradle.properties (this is so the key is not in github)
@@ -45,7 +46,6 @@ android {
             if (project.hasProperty("SAFETY_NET_FILE")) {
                 signingConfig signingConfigs.release
             }
-
         }
         release {
             buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + GOOGLE_VERIFICATION_API_KEY + "\"")
@@ -56,9 +56,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    productFlavors {
-    }
-
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -66,10 +63,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':safetynetlib')
+
+    //testing the jitlab dependancy
     //compile 'com.github.scottyab:safetynethelper:0.1.0@aar'
+
     compile 'com.android.support:appcompat-v7:23.4.0'
-
-
 }
