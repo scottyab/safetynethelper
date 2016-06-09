@@ -7,24 +7,24 @@ repositories {
 }
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId 'com.scottyab.safetynet.sample'
         minSdkVersion 10
-        targetSdkVersion 22
-        versionCode 2
-        versionName "0.2"
+        targetSdkVersion 23
+        versionCode 3
+        versionName "0.3"
     }
 
     //check if SAFETY_NET_DEVICE_VERIFICATION_API_KEY is defined in gradle.properties (this is so the key is not in github)
     String GOOGLE_VERIFICATION_API_KEY = "";
-    if(project.hasProperty("SAFETY_NET_DEVICE_VERIFICATION_API_KEY")) {
+    if (project.hasProperty("SAFETY_NET_DEVICE_VERIFICATION_API_KEY")) {
         GOOGLE_VERIFICATION_API_KEY = SAFETY_NET_DEVICE_VERIFICATION_API_KEY
     }
 
     //check if the keystore details are defined in gradle.properties (this is so the key is not in github)
-    if(project.hasProperty("SAFETY_NET_FILE")) {
+    if (project.hasProperty("SAFETY_NET_FILE")) {
         signingConfigs {
             //from gradle.properties
             release {
@@ -37,20 +37,20 @@ android {
     }
 
     buildTypes {
-            debug{
-                buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + GOOGLE_VERIFICATION_API_KEY +"\"")
-                minifyEnabled false
-                applicationIdSuffix ".debug"
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-                if(project.hasProperty("SAFETY_NET_FILE")) {
-                    signingConfig signingConfigs.release
-                }
-
-            }
-        release {
-            buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + GOOGLE_VERIFICATION_API_KEY +"\"")
+        debug {
+            buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + GOOGLE_VERIFICATION_API_KEY + "\"")
             minifyEnabled false
-            if(project.hasProperty("SAFETY_NET_FILE")) {
+            applicationIdSuffix ".debug"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (project.hasProperty("SAFETY_NET_FILE")) {
+                signingConfig signingConfigs.release
+            }
+
+        }
+        release {
+            buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + GOOGLE_VERIFICATION_API_KEY + "\"")
+            minifyEnabled false
+            if (project.hasProperty("SAFETY_NET_FILE")) {
                 signingConfig signingConfigs.release
             }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -69,7 +69,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':safetynetlib')
     //compile 'com.github.scottyab:safetynethelper:0.1.0@aar'
-    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:appcompat-v7:23.4.0'
 
 
 }
