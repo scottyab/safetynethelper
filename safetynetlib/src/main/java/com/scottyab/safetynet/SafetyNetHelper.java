@@ -17,6 +17,7 @@ import com.google.android.gms.safetynet.SafetyNetApi;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -51,8 +52,7 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     private long requestTimestamp;
     private String packageName;
 
-    //not used currently
-    private String[] apkCertificateDigests;
+    private List<String> apkCertificateDigests;
     private String apkDigest;
 
 
@@ -101,9 +101,8 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         packageName = context.getPackageName();
         callback = safetyNetWrapperCallback;
 
-        //commented out for now as cannot recreate the values Google play services is using
-        apkCertificateDigests = Utils.calcApkCertificateDigests(context);
-        Log.d(TAG, "apkCertificateDigests:"+ Arrays.asList(apkCertificateDigests));
+        apkCertificateDigests = Utils.calcApkCertificateDigests(context, packageName);
+        Log.d(TAG, "apkCertificateDigests:" + apkCertificateDigests);
         apkDigest = Utils.calcApkDigest(context);
         Log.d(TAG, "apkDigest:"+apkDigest);
     }
@@ -202,11 +201,10 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
             return false;
         }
 
-        //This is commented out as couldn't recreate the ApkCertificateDigest need more info on how these are constructed.
-        if (!Arrays.equals(apkCertificateDigests,  response.getApkCertificateDigestSha256())){
+        if (!Arrays.equals(apkCertificateDigests.toArray(), response.getApkCertificateDigestSha256())){
             Log.e(TAG, "invalid apkCertificateDigest, local/expected = " + Arrays.asList(apkCertificateDigests));
             Log.e(TAG, "invalid apkCertificateDigest, response = " +  Arrays.asList(response.getApkCertificateDigestSha256()));
-//            return false;
+            return false;
         }
 
         if (!apkDigest.equals(response.getApkDigestSha256())){
