@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 /**
  *
  * SafetyNet API payload Response (once unencoded from JSON Web token)
@@ -128,15 +130,16 @@ public class SafetyNetResponse {
         return null;
     }
 
+
     @Override
     public String toString() {
-        return "SafetyNetResponse{" +"\n"+
-                "nonce='" + nonce + '\'' + "\n"+
-                ", timestampMs=" + timestampMs +"\n"+
-                ", apkPackageName='" + apkPackageName + '\'' +"\n"+
-                ", apkCertificateDigestSha256='" + apkCertificateDigestSha256 + '\'' +"\n"+
-                ", apkDigestSha256='" + apkDigestSha256 + '\'' +"\n"+
-                ", ctsProfileMatch=" + ctsProfileMatch +"\n"+
+        return "SafetyNetResponse{" +
+                "nonce='" + nonce + '\'' +
+                ", timestampMs=" + timestampMs +
+                ", apkPackageName='" + apkPackageName + '\'' +
+                ", apkCertificateDigestSha256=" + Arrays.toString(apkCertificateDigestSha256) +
+                ", apkDigestSha256='" + apkDigestSha256 + '\'' +
+                ", ctsProfileMatch=" + ctsProfileMatch +
                 '}';
     }
 }
