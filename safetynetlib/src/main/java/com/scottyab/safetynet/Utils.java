@@ -18,6 +18,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
@@ -125,29 +127,33 @@ public class Utils {
         return str.toString();
     }
 
-    public static String[] calcApkCertificateDigests(final Context context) {
+    public static List<String> calcApkCertificateDigests(Context context, String packageName) {
+        List<String> encodedSignatures = new ArrayList<String>();
+
+        // Get signatures from package manager
+        PackageManager pm = context.getPackageManager();
+        PackageInfo packageInfo;
         try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-            Signature[] signatures = packageInfo.signatures;
-            String[] certDigests = new String[signatures.length];
-            for (int i = 0; i < signatures.length; i++) {
-                byte[] cert = signatures[i].toByteArray();
-
-                MessageDigest md = MessageDigest.getInstance("SHA-256");
-                md.update(cert, 0, cert.length);
-                certDigests[i]=Base64.encodeToString(cert, Base64.NO_WRAP);
-            }
-            return certDigests;
-        }catch (Exception e){
-            //this is just a test
+            packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return encodedSignatures;
         }
-        return null;
-        //
-        //byte[] certificate = getSigningKeyCertificate(context);
-        //byte[] hashed = hash(certificate);
-    }
+        Signature[] signatures = packageInfo.signatures;
 
+        // Calculate b64 encoded sha256 hash of signatures
+        for (Signature signature : signatures) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                md.update(signature.toByteArray());
+                byte[] digest = md.digest();
+                encodedSignatures.add(Base64.encodeToString(digest, Base64.NO_WRAP));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
+        return encodedSignatures;
+    }
 
     public static String calcApkDigest(final Context context) {
         byte[] hashed2 = getApkFileDigest(context);
