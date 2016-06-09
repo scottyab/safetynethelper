@@ -42,6 +42,10 @@ android {
                 minifyEnabled false
                 applicationIdSuffix ".debug"
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                if(project.hasProperty("SAFETY_NET_FILE")) {
+                    signingConfig signingConfigs.release
+                }
+
             }
         release {
             buildConfigField("String", "GOOGLE_VERIFICATION_API_KEY", "\"" + GOOGLE_VERIFICATION_API_KEY +"\"")
