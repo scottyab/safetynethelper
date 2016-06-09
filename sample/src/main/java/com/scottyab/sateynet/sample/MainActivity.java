@@ -37,6 +37,7 @@ import com.scottyab.safetynet.sample.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import android.content.pm.PackageManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -134,6 +135,17 @@ public class MainActivity extends AppCompatActivity {
             case SafetyNetHelper.RESPONSE_VALIDATION_FAILED:
                 b.append("SafetyNet request: success\n");
                 b.append("Response validation: fail\n");
+                break;
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                b.append("SafetyNet request: fail\n");
+                b.append("\n*GooglePlayServices outdated*\n");
+                try {
+                    int v = getPackageManager().getPackageInfo("com.google.android.gms", 0).versionCode;
+                    String vName = getPackageManager().getPackageInfo("com.google.android.gms", 0).versionName.split(" ")[0];
+                    b.append("You are running version:\n" + vName + " " + v + "\nSafetyNet requires minimum:\n7.3.27 7327000\n");
+                } catch (Exception NameNotFoundException) {
+                    b.append("Could not find GooglePlayServices on this device.\nPackage com.google.android.gms missing.");
+                }
                 break;
         }
         resultsTV.setText(b.toString() + "\nError Msg:\n" + errorMsg);
