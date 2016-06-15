@@ -31,6 +31,7 @@ public class Utils {
 
 
     private static final String TAG = Utils.class.getSimpleName();
+    public static final String SHA_256 = "SHA-256";
 
     /**
      * Created SHA256 of input
@@ -58,7 +59,7 @@ public class Utils {
         if(input!=null) {
             final MessageDigest digest;
             try {
-                digest = MessageDigest.getInstance("SHA-256");
+                digest = MessageDigest.getInstance(SHA_256);
                 byte[] hashedBytes = input;
                 digest.update(hashedBytes, 0, hashedBytes.length);
                 return hashedBytes;
@@ -144,7 +145,7 @@ public class Utils {
         // Calculate b64 encoded sha256 hash of signatures
         for (Signature signature : signatures) {
             try {
-                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                MessageDigest md = MessageDigest.getInstance(SHA_256);
                 md.update(signature.toByteArray());
                 byte[] digest = md.digest();
                 encodedSignatures.add(Base64.encodeToString(digest, Base64.NO_WRAP));
@@ -182,7 +183,7 @@ public class Utils {
     private static byte[] getApkFileDigest(Context context) {
         String apkPath = context.getPackageCodePath();
         try {
-            return getDigest(new FileInputStream(apkPath), "SHA-256");
+            return getDigest(new FileInputStream(apkPath), SHA_256);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
