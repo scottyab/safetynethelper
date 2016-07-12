@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             shareTestResults();
             return true;
         }else if (id == R.id.action_github){
-            openGithubProjectPage();
+            openGitHubProjectPage();
             return true;
         }
 
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openGithubProjectPage(){
+    private void openGitHubProjectPage(){
         startActivity(new Intent(Intent.ACTION_VIEW,
                 Uri.parse("https://github.com/scottyab/safetynethelper/")));
     }
