@@ -121,7 +121,6 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
                 .setResultCallback(new ResultCallback<SafetyNetApi.AttestationResult>() {
                                        @Override
                                        public void onResult(final SafetyNetApi.AttestationResult result) {
-
                                            if (!validateResultStatus(result)) {
                                                return;
                                            }
@@ -129,33 +128,40 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
                                            final String jwsResult = result.getJwsResult();
                                            final SafetyNetResponse response = parseJsonWebSignature(jwsResult);
                                            lastResponse = response;
-                                           //validate payload of the response
-                                           if (validateSafetyNetResponsePayload(response)) {
-                                               if (!TextUtils.isEmpty(googleDeviceVerificationApiKey)) {
-                                                   //if the api key is set, run the AndroidDeviceVerifier
-                                                   AndroidDeviceVerifier androidDeviceVerifier = new AndroidDeviceVerifier(googleDeviceVerificationApiKey, jwsResult);
-                                                   androidDeviceVerifier.verify(new AndroidDeviceVerifier.AndroidDeviceVerifierCallback() {
-                                                       @Override
-                                                       public void error(String errorMsg) {
-                                                           callback.error(RESPONSE_ERROR_VALIDATING_SIGNATURE, "Response signature validation error: " + errorMsg);
-                                                       }
 
-                                                       @Override
-                                                       public void success(boolean isValidSignature) {
-                                                           if (isValidSignature) {
-                                                               callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
-                                                           } else {
-                                                               callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION, "Response signature invalid");
-
-                                                           }
-                                                       }
-                                                   });
-                                               } else {
-                                                   Log.w(TAG, "No google Device Verification ApiKey defined");
-                                                   callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION_NO_API_KEY, "No Google Device Verification ApiKey defined. Marking as failed. SafetyNet CtsProfileMatch: " + response.isCtsProfileMatch());
-                                               }
+                                           //only need to validate the response if it says we pass
+                                           if (!response.isCtsProfileMatch() || !response.isBasicIntegrity()) {
+                                               callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
+                                               return;
                                            } else {
-                                               callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
+                                               //validate payload of the response
+                                               if (validateSafetyNetResponsePayload(response)) {
+                                                   if (!TextUtils.isEmpty(googleDeviceVerificationApiKey)) {
+                                                       //if the api key is set, run the AndroidDeviceVerifier
+                                                       AndroidDeviceVerifier androidDeviceVerifier = new AndroidDeviceVerifier(googleDeviceVerificationApiKey, jwsResult);
+                                                       androidDeviceVerifier.verify(new AndroidDeviceVerifier.AndroidDeviceVerifierCallback() {
+                                                           @Override
+                                                           public void error(String errorMsg) {
+                                                               callback.error(RESPONSE_ERROR_VALIDATING_SIGNATURE, "Response signature validation error: " + errorMsg);
+                                                           }
+
+                                                           @Override
+                                                           public void success(boolean isValidSignature) {
+                                                               if (isValidSignature) {
+                                                                   callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
+                                                               } else {
+                                                                   callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION, "Response signature invalid");
+
+                                                               }
+                                                           }
+                                                       });
+                                                   } else {
+                                                       Log.w(TAG, "No google Device Verification ApiKey defined");
+                                                       callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION_NO_API_KEY, "No Google Device Verification ApiKey defined. Marking as failed. SafetyNet CtsProfileMatch: " + response.isCtsProfileMatch());
+                                                   }
+                                               } else {
+                                                   callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
+                                               }
                                            }
                                        }
                                    }
