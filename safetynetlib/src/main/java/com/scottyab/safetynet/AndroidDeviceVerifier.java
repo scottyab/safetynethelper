@@ -22,30 +22,28 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 /**
- *
  * Validates the result with Android Device Verification API.
- *
+ * <p>
  * Note: This only validates that the provided JWS (JSON Web Signature) message was received from the actual SafetyNet service.
  * It does *not* verify that the payload data matches your original compatibility check request.
  * POST to https://www.googleapis.com/androidcheck/v1/attestations/verify?key=<your API key>
- *
+ * <p>
  * More info see {link https://developer.android.com/google/play/safetynet/start.html#verify-compat-check}
- *
- * Created by scottab on 27/05/2015.
  */
 public class AndroidDeviceVerifier {
 
     private static final String TAG = AndroidDeviceVerifier.class.getSimpleName();
 
-    //used to verifiy the safety net response - 10,000 requests/day free
+    //used to verify the safety net response - 10,000 requests/day free
     private static final String GOOGLE_VERIFICATION_URL = "https://www.googleapis.com/androidcheck/v1/attestations/verify?key=";
 
     private final String apiKey;
     private final String signatureToVerify;
     private AndroidDeviceVerifierCallback callback;
 
-    public interface AndroidDeviceVerifierCallback{
+    public interface AndroidDeviceVerifierCallback {
         void error(String s);
+
         void success(boolean isValidSignature);
     }
 
@@ -54,7 +52,7 @@ public class AndroidDeviceVerifier {
         this.signatureToVerify = signatureToVerify;
     }
 
-    public void verify(AndroidDeviceVerifierCallback androidDeviceVerifierCallback){
+    public void verify(AndroidDeviceVerifierCallback androidDeviceVerifierCallback) {
         callback = androidDeviceVerifierCallback;
         AndroidDeviceVerifierTask task = new AndroidDeviceVerifierTask();
         task.execute();
@@ -62,6 +60,7 @@ public class AndroidDeviceVerifier {
 
     /**
      * Provide the trust managers for the URL connection. By Default this uses the system defaults plus the GoogleApisTrustManager (SSL pinning)
+     *
      * @return array of TrustManager including system defaults plus the GoogleApisTrustManager (SSL pinning)
      * @throws KeyStoreException
      * @throws NoSuchAlgorithmException
@@ -69,7 +68,7 @@ public class AndroidDeviceVerifier {
     protected TrustManager[] getTrustManagers() throws KeyStoreException, NoSuchAlgorithmException {
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         //init with the default system trustmanagers
-        trustManagerFactory.init((KeyStore)null);
+        trustManagerFactory.init((KeyStore) null);
         TrustManager[] defaultTrustManagers = trustManagerFactory.getTrustManagers();
         TrustManager[] trustManagers = Arrays.copyOf(defaultTrustManagers, defaultTrustManagers.length + 1);
         //add our Google APIs pinning TrustManager for extra security
@@ -78,8 +77,7 @@ public class AndroidDeviceVerifier {
     }
 
 
-
-    private class AndroidDeviceVerifierTask extends AsyncTask<Void, Void, Boolean>{
+    private class AndroidDeviceVerifierTask extends AsyncTask<Void, Void, Boolean> {
 
         private Exception error;
 
@@ -101,7 +99,7 @@ public class AndroidDeviceVerifier {
                 urlConnection.setRequestProperty("Content-Type", "application/json");
 
                 //build post body { "signedAttestation": "<output of getJwsResult()>" }
-                String requestJsonBody = "{ \"signedAttestation\": \""+signatureToVerify+"\"}";
+                String requestJsonBody = "{ \"signedAttestation\": \"" + signatureToVerify + "\"}";
                 byte[] outputInBytes = requestJsonBody.getBytes("UTF-8");
                 OutputStream os = urlConnection.getOutputStream();
                 os.write(outputInBytes);
@@ -119,10 +117,10 @@ public class AndroidDeviceVerifier {
                 }
                 String response = sb.toString();
                 JSONObject responseRoot = new JSONObject(response);
-                if(responseRoot.has("isValidSignature")){
+                if (responseRoot.has("isValidSignature")) {
                     return responseRoot.getBoolean("isValidSignature");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 //something went wrong requesting validation of the JWS Message
                 error = e;
                 Log.e(TAG, "problem validating JWS Message :" + e.getMessage(), e);
@@ -133,9 +131,9 @@ public class AndroidDeviceVerifier {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if(error!=null){
+            if (error != null) {
                 callback.error(error.getMessage());
-            }else {
+            } else {
                 callback.success(aBoolean);
             }
         }

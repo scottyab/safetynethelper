@@ -15,6 +15,8 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 
 *Check if your app is running on a device that matches a device model that has passed Android compatibility testing. This analysis can help you determine if your app will work as expected on the device where it is installed. The service evaluates both software and hardware characteristics of the device, and may use hardware roots of trust, when available.*
 
+* Since this library release Google has created an [Safety Net Sample](https://github.com/googlesamples/android-play-safetynet/tree/master/android/SafetyNetSample)
+
 
 ##Features
 

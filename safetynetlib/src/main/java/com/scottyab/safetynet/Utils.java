@@ -25,7 +25,6 @@ import java.util.zip.CheckedInputStream;
 
 /**
  * Useful but separate utils used by the safetynet helper
- * Created by scottab on 02/06/2015.
  */
 public class Utils {
 

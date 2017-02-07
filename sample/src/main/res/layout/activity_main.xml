@@ -1,143 +1,160 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:id="@+id/pageContainer"
-        >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
-        <Button
-        android:id="@+id/runTestButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Run SafetyNet test"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-<LinearLayout
+            <Button
+                android:id="@+id/runTestButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/run_safetynet_test_button" />
+
+
+            <TextView
+                android:id="@+id/welcomeTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="@string/info_details"
+                android:textSize="16sp" />
+
+            <LinearLayout
                 android:id="@+id/resultsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="vertical"
                 android:layout_weight="1"
-                android:visibility="gone"
-                tools:visibility="visible"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:visibility="gone"
                 tools:background="@color/pass"
-                android:animateLayoutChanges="true"
-                tools:context=".MainActivity">
+                tools:context=".MainActivity"
+                tools:visibility="visible">
 
-    <TextView
-        android:id="@+id/results"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"/>
+                <TextView
+                    android:id="@+id/results"
+                    style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp" />
 
-    <ImageView
-        android:id="@+id/resultIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp" android:layout_weight="1"
-        android:layout_gravity="top|center_horizontal"
-        tools:src="@drawable/pass"
-        />
+                <TextView
+                    android:id="@+id/resultsNote"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="10dp" />
 
-    <ScrollView
-        android:id="@+id/sucessResultsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:fillViewport="true"
-        >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal"
-        android:padding="4dp"
-        >
+                <ImageView
+                    android:id="@+id/resultIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_weight="1"
+                    tools:src="@drawable/pass" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
-            android:gravity="center_horizontal"
-            android:text="Request token" />
-        <TextView
-            android:id="@+id/nonce"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            tools:text="egijerogjeogjoierjgoiej"
-            />
+                <ScrollView
+                    android:id="@+id/sucessResultsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
-        <TextView
-            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Timestamp" />
-        <TextView
-            android:id="@+id/timestamp"
-            android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="49865416845212"
-            />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <TextView
+                            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="@string/request_token" />
+
+                        <TextView
+                            android:id="@+id/nonce"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            tools:text="egijerogjeogjoierjgoiej" />
+
+                        <TextView
+                            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="@string/timestamp" />
+
+                        <TextView
+                            android:id="@+id/timestamp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            tools:text="49865416845212" />
 
 
-        <TextView
-            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Package name" />
-        <TextView
-            android:id="@+id/packagename"
-            android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="com.scottyab.safetynet.sample"
-            />
+                        <TextView
+                            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="@string/package_name" />
 
+                        <TextView
+                            android:id="@+id/packagename"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            tools:text="com.scottyab.safetynet.sample" />
+
+                    </LinearLayout>
+                </ScrollView>
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-</LinearLayout>
-    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="#66000000">
+        android:background="#66000000"
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
             android:layout_centerInParent="true"
-
-            />
+            android:indeterminate="true" />
 
         <TextView
-            android:layout_below="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/progressBar"
             android:layout_centerHorizontal="true"
-            android:text="Loading..."/>
+            android:text="@string/msg_loading" />
 
     </RelativeLayout>
 

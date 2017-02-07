@@ -1,25 +1,27 @@
 package com.scottyab.safetynet;
 
 import android.util.Base64;
+import android.util.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.X509TrustManager;
 
 /**
  * Custom TrustManager to use SSL public key Pinning to verify connections to www.googleapis.com
- * Created by scottab on 27/05/2015.
  */
 public class GoogleApisTrustManager implements X509TrustManager {
 
     //good candidate for DexGuard string encryption. Generated with https://github.com/scottyab/ssl-pin-generator
-    private final static String[] GOOGLEAPIS_COM_PINS = new String[] {
+    private final static String[] GOOGLEAPIS_COM_PINS = new String[]{
             "sha1/f2QjSla9GtnwpqhqreDLIkQNFu8=",
             "sha1/Q9rWMO5T+KmAym79hfRqo3mQ4Oo=",
-            "sha1/wHqYaI2J+6sFZAwRfap9ZbjKzE4=" };
+            "sha1/wHqYaI2J+6sFZAwRfap9ZbjKzE4="};
 
     @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
@@ -52,6 +54,7 @@ public class GoogleApisTrustManager implements X509TrustManager {
         } catch (NoSuchAlgorithmException e) {
             throw new CertificateException(e);
         }
+
 
         final byte[] pubKeyInfo = certificate.getPublicKey().getEncoded();
         final byte[] pin = digest.digest(pubKeyInfo);
