@@ -26,12 +26,11 @@ import java.util.List;
  * <p/>
  * Doesn't handle Google play services errors, just calls error on callback.
  * <p/>
- * Created by scottab on 26/05/2015.
  */
 public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = SafetyNetHelper.class.getSimpleName();
-    public static final int SAFTYNET_API_REQUEST_UNSUCCESSFUL = 999;
+    public static final int SAFETY_NET_API_REQUEST_UNSUCCESSFUL = 999;
     public static final int RESPONSE_ERROR_VALIDATING_SIGNATURE = 1000;
     public static final int RESPONSE_FAILED_SIGNATURE_VALIDATION = 1002;
     public static final int RESPONSE_FAILED_SIGNATURE_VALIDATION_NO_API_KEY = 1003;
@@ -78,7 +77,7 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     public interface SafetyNetWrapperCallback {
         void error(int errorCode, String errorMessage);
 
-        void success(boolean ctsProfileMatch);
+        void success(boolean ctsProfileMatch, boolean basicIntegrity);
     }
 
     private synchronized void buildGoogleApiClient(Context context) {
@@ -116,54 +115,63 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
 
     private void runSaftyNetTest() {
         Log.v(TAG, "running SafetyNet.API Test");
-
         requestNonce = generateOneTimeRequestNonce();
         requestTimestamp = System.currentTimeMillis();
         SafetyNet.SafetyNetApi.attest(googleApiClient, requestNonce)
                 .setResultCallback(new ResultCallback<SafetyNetApi.AttestationResult>() {
-                    @Override
-                    public void onResult(final SafetyNetApi.AttestationResult result) {
-                        Status status = result.getStatus();
-                        //JSON Web Signature format
-                        final String jwsResult = result.getJwsResult();
-                        if (status.isSuccess() && !TextUtils.isEmpty(jwsResult)) {
-                            final SafetyNetResponse response = parseJsonWebSignature(jwsResult);
-                            lastResponse = response;
+                                       @Override
+                                       public void onResult(final SafetyNetApi.AttestationResult result) {
 
-                            //validate payload of the response
-                            if (validateSafetyNetResponsePayload(response)) {
-                                if (!TextUtils.isEmpty(googleDeviceVerificationApiKey)) {
-                                    //if the api key is set, run the AndroidDeviceVerifier
-                                    AndroidDeviceVerifier androidDeviceVerifier = new AndroidDeviceVerifier(googleDeviceVerificationApiKey, jwsResult);
-                                    androidDeviceVerifier.verify(new AndroidDeviceVerifier.AndroidDeviceVerifierCallback() {
-                                        @Override
-                                        public void error(String errorMsg) {
-                                            callback.error(RESPONSE_ERROR_VALIDATING_SIGNATURE, "Response signature validation error: " + errorMsg);
-                                        }
+                                           if (!validateResultStatus(result)) {
+                                               return;
+                                           }
 
-                                        @Override
-                                        public void success(boolean isValidSignature) {
-                                            if (isValidSignature) {
-                                                callback.success(response.isCtsProfileMatch());
-                                            } else {
-                                                callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION, "Response signature invalid");
+                                           final String jwsResult = result.getJwsResult();
+                                           final SafetyNetResponse response = parseJsonWebSignature(jwsResult);
+                                           lastResponse = response;
+                                           //validate payload of the response
+                                           if (validateSafetyNetResponsePayload(response)) {
+                                               if (!TextUtils.isEmpty(googleDeviceVerificationApiKey)) {
+                                                   //if the api key is set, run the AndroidDeviceVerifier
+                                                   AndroidDeviceVerifier androidDeviceVerifier = new AndroidDeviceVerifier(googleDeviceVerificationApiKey, jwsResult);
+                                                   androidDeviceVerifier.verify(new AndroidDeviceVerifier.AndroidDeviceVerifierCallback() {
+                                                       @Override
+                                                       public void error(String errorMsg) {
+                                                           callback.error(RESPONSE_ERROR_VALIDATING_SIGNATURE, "Response signature validation error: " + errorMsg);
+                                                       }
 
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    Log.w(TAG, "No google Device Verification ApiKey defined");
-                                    callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION_NO_API_KEY, "No Google Device Verification ApiKey defined. Marking as failed. SafetyNet CtsProfileMatch: " + response.isCtsProfileMatch());
-                                }
-                            } else {
-                                callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
-                            }
-                        } else {
-                            // An error occurred while communicating with the SafetyNet Api
-                            callback.error(SAFTYNET_API_REQUEST_UNSUCCESSFUL, "SafetyNetApi.AttestationResult success == false or empty payload");
-                        }
-                    }
-                });
+                                                       @Override
+                                                       public void success(boolean isValidSignature) {
+                                                           if (isValidSignature) {
+                                                               callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
+                                                           } else {
+                                                               callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION, "Response signature invalid");
+
+                                                           }
+                                                       }
+                                                   });
+                                               } else {
+                                                   Log.w(TAG, "No google Device Verification ApiKey defined");
+                                                   callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION_NO_API_KEY, "No Google Device Verification ApiKey defined. Marking as failed. SafetyNet CtsProfileMatch: " + response.isCtsProfileMatch());
+                                               }
+                                           } else {
+                                               callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
+                                           }
+                                       }
+                                   }
+
+                );
+    }
+
+    private boolean validateResultStatus(SafetyNetApi.AttestationResult result) {
+        Status status = result.getStatus();
+        boolean isSuccess = status.isSuccess();
+
+        if (!isSuccess) {
+            // An error occurred while communicating with the SafetyNet Api
+            callback.error(SAFETY_NET_API_REQUEST_UNSUCCESSFUL, "Call to SafetyNetApi.attest was not successful");
+        }
+        return isSuccess;
     }
 
     /**
@@ -217,9 +225,11 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         return true;
     }
 
-    private
     @Nullable
-    SafetyNetResponse parseJsonWebSignature(@NonNull String jwsResult) {
+    private SafetyNetResponse parseJsonWebSignature(String jwsResult) {
+        if (jwsResult == null) {
+            return null;
+        }
         //the JWT (JSON WEB TOKEN) is just a 3 base64 encoded parts concatenated by a . character
         final String[] jwtParts = jwsResult.split("\\.");
 
