@@ -27,7 +27,7 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 
 ## Requires / Dependencies
 
-* Google Play services 7+ (specifically the SafetyNet API 'com.google.android.gms:play-services-safetynet:7.+')
+* Google Play services 7+ (specifically the SafetyNet API 'com.google.android.gms:play-services-safetynet:10.0.1')
 * Requires Internet permission
 * Google API key for the [Android Device Verification API](https://developer.android.com/training/safetynet/index.html#verify-compat-check)
 
@@ -94,7 +94,7 @@ then add a library dependency
 ```gradle
 
     dependencies {
-        compile 'com.github.scottyab:safetynethelper:0.2.0'
+        compile 'com.github.scottyab:safetynethelper:0.3.0'
     }
 ```
 
