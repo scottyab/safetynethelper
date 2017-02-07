@@ -15,7 +15,7 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 
 *Check if your app is running on a device that matches a device model that has passed Android compatibility testing. This analysis can help you determine if your app will work as expected on the device where it is installed. The service evaluates both software and hardware characteristics of the device, and may use hardware roots of trust, when available.*
 
-* Since this library release Google has created an [Safety Net Sample](https://github.com/googlesamples/android-play-safetynet/tree/master/android/SafetyNetSample)
+*Since this library release Google has created an [Safety Net Sample](https://github.com/googlesamples/android-play-safetynet/tree/master/android/SafetyNetSample)
 
 
 ##Features
@@ -31,16 +31,18 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 * Requires Internet permission
 * Google API key for the [Android Device Verification API](https://developer.android.com/training/safetynet/index.html#verify-compat-check)
 
-##Server Validation
-This library is to get you going with SafetyNet attest API. For more secure and robust validation you _need_ to include a server-side component for the validation.
+##Server Validation!!!
+This library was built to get app developers up and going with SafetyNet attest API.
+With skill and time any device based checks can be bypassed. This is why the validation should be handled by the server. Therefore you should look at implementing more robust and secure validation of the `attest` response via a server-side component.
 
-* Server creates the initial nonce / request Token
-* Pass the response from SafetyNet API to your server for validation (the same validation check which this library completes)
-	* Check the nonce is the same
+* App requests the nonce / request token from your server
+* Call `SafetyNet.SafetyNetApi.attest(googleApiClient, requestNonce)
+* Pass the JWT response from SafetyNet API to your server for validation (the same validation check which this library completes)
+	* Check the nonce/request token matches the expected value
 	* verify the SafetyNet response is from Google using the Android Device Verification API
 	* verify app package, timestamp, apk and certificate digests
 
-With skill and time any device based checks can be bypassed. This is why the validation should be handled by the server. This way at least your server would know if the device (and app installation) was compromised and take appropriate action e.g revoking tokens.
+If verification fails then at least your server would know if the device (and app installation) was compromised and take appropriate action e.g revoking OAUTH tokens.
 
 
 ## How to use
@@ -59,11 +61,13 @@ You'll need to get a **API key** from the Google developer console to allow you 
             }
 
             @Override
-            public void success(boolean ctsProfileMatch) {
+            public void success(boolean ctsProfileMatch, boolean basicIntegrity) {
                 if (ctsProfileMatch) {
-                    //handle pass
+                    //profile of the device running your app matches the profile of a device that has passed Android compatibility testing.
+                else if(basicIntegrity){
+                    //then the device running your app likely wasn't tampered with, but the device has not necessarily passed Android compatibility testing.
                 } else {
-                    //handle fail, maybe warn user device is unsupported?
+                    //handle fail, maybe warn user device is unsupported or in compromised state? (this is up to you!)
                 }
             }
         });
