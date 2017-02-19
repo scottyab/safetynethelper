@@ -15,7 +15,6 @@ android {
         targetSdkVersion 25
         versionCode 5
         versionName "0.5"
-
     }
 
     //check if SAFETY_NET_DEVICE_VERIFICATION_API_KEY is defined in gradle.properties (this is so the key is not in github)
@@ -68,5 +67,5 @@ dependencies {
     //testing the jitlab dependancy
     //compile 'com.github.scottyab:safetynethelper:0.1.0@aar'
 
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
 }
