@@ -11,7 +11,7 @@ android {
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId 'com.scottyab.safetynet.sample'
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 25
         versionCode 5
         versionName "0.5"
