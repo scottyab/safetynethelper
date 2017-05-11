@@ -110,10 +110,10 @@ public class SafetyNetHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     @Override
     public void onConnected(Bundle bundle) {
         Log.v(TAG, "Google play services connected");
-        runSaftyNetTest();
+        runSafetyNetTest();
     }
 
-    private void runSaftyNetTest() {
+    private void runSafetyNetTest() {
         Log.v(TAG, "running SafetyNet.API Test");
         requestNonce = generateOneTimeRequestNonce();
         requestTimestamp = System.currentTimeMillis();
