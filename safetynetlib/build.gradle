@@ -24,7 +24,5 @@ android {
 
 dependencies {
     implementation 'com.android.support:support-annotations:27.1.1'
-    implementation ('com.google.android.gms:play-services-safetynet:12.0.1') {
-        exclude module: 'support-v4'
-    }
+    implementation ('com.google.android.gms:play-services-safetynet:15.0.1')
 }
