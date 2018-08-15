@@ -4,11 +4,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.Arrays;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Arrays;
 
 /**
  * SafetyNet API payload Response (once unencoded from JSON Web token)
@@ -21,10 +21,8 @@ import java.util.Arrays;
  * "ctsProfileMatch": false,
  * "basicIntegrity": false,
  * "extension": "CY+oATrcJ6Cr",
- * "apkCertificateDigestSha256": [
- * "Yao6w7Yy7/ab2bNEygMbXqN9+16j8mLKKTCsUcU3Mzw="
- * <p>
- * ]
+ * "apkCertificateDigestSha256": ["Yao6w7Yy7/ab2bNEygMbXqN9+16j8mLKKTCsUcU3Mzw="]
+ * "advice": "LOCK_BOOTLOADER,RESTORE_TO_FACTORY_ROM"
  * }
  * <p>
  */
@@ -38,6 +36,7 @@ public class SafetyNetResponse {
     private String apkDigestSha256;
     private boolean ctsProfileMatch;
     private boolean basicIntegrity;
+    private String advice;
 
     //forces the parse()
     private SafetyNetResponse() {
@@ -73,8 +72,11 @@ public class SafetyNetResponse {
     /**
      * SHA-256 hash of the app's APK
      *
+     * Google Play since March 2018 adds a small amount of metadata to all apps which makes this apk validation less useful. 
+     *
      * @return BASE64 encoded
      */
+    @Deprecated
     public String getApkDigestSha256() {
         return apkDigestSha256;
     }
@@ -96,6 +98,15 @@ public class SafetyNetResponse {
      */
     public boolean isBasicIntegrity() {
         return basicIntegrity;
+    }
+
+    /**
+     * Advice for passing future checks
+     *
+     * @return
+     */
+    public String getAdvice() {
+        return advice;
     }
 
     /**
@@ -147,6 +158,10 @@ public class SafetyNetResponse {
                 response.timestampMs = root.getLong("timestampMs");
             }
 
+            if (root.has("advice")) {
+                response.advice = root.getString("advice");
+            }
+
             return response;
         } catch (JSONException e) {
             Log.e(TAG, "problem parsing decodedJWTPayload:" + e.getMessage(), e);
@@ -165,6 +180,9 @@ public class SafetyNetResponse {
                 ", apkDigestSha256='" + apkDigestSha256 + '\'' +
                 ", ctsProfileMatch=" + ctsProfileMatch +
                 ", basicIntegrity=" + basicIntegrity +
+                ", advice=" + advice +
                 '}';
     }
+
+
 }
