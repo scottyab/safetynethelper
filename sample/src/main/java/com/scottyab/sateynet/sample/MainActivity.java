@@ -8,8 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,12 +27,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "SafetyNetHelperSAMPLE";
 
-    //*** REPLACE with your own!! ***
+    //*** TODO REPLACE with your own!! ***
     private static final String API_KEY = BuildConfig.GOOGLE_VERIFICATION_API_KEY;
     private View loading;
 
@@ -68,16 +68,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        welcomeTV = (TextView) findViewById(R.id.welcomeTV);
-        resultsTV = (TextView) findViewById(R.id.results);
-        resultNoteTV = (TextView) findViewById(R.id.resultsNote);
-        nonceTV = (TextView) findViewById(R.id.nonce);
-        timestampTV = (TextView) findViewById(R.id.timestamp);
-        packageNameTV = (TextView) findViewById(R.id.packagename);
+        welcomeTV = findViewById(R.id.welcomeTV);
+        resultsTV = findViewById(R.id.results);
+        resultNoteTV = findViewById(R.id.resultsNote);
+        nonceTV = findViewById(R.id.nonce);
+        timestampTV = findViewById(R.id.timestamp);
+        packageNameTV = findViewById(R.id.packagename);
         resultsContainer = findViewById(R.id.resultsContainer);
         successResultsContainer = findViewById(R.id.sucessResultsContainer);
         loading = findViewById(R.id.loading);
-        resultsIcon = (ImageView) findViewById(R.id.resultIcon);
+        resultsIcon = findViewById(R.id.resultIcon);
 
         findViewById(R.id.runTestButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,17 +132,6 @@ public class MainActivity extends AppCompatActivity {
                 b.append("SafetyNet request: success\n");
                 b.append("Response validation: fail\n");
                 break;
-            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                b.append("SafetyNet request: fail\n");
-                b.append("\n*GooglePlayServices outdated*\n");
-                try {
-                    int v = getPackageManager().getPackageInfo("com.google.android.gms", 0).versionCode;
-                    String vName = getPackageManager().getPackageInfo("com.google.android.gms", 0).versionName.split(" ")[0];
-                    b.append("You are running version:\n" + vName + " " + v + "\nSafetyNet requires minimum:\n7.3.27 7327000\n");
-                } catch (Exception NameNotFoundException) {
-                    b.append("Could not find GooglePlayServices on this device.\nPackage com.google.android.gms missing.");
-                }
-                break;
         }
         resultsTV.setText(b.toString());
         resultNoteTV.setText("Error Msg:\n" + errorMsg);
@@ -164,12 +153,8 @@ public class MainActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void revealResults(Integer colorTo) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            doPropertyAnimatorReveal(colorTo);
-            resultsContainer.setVisibility(View.VISIBLE);
-        } else {
-            resultsContainer.setVisibility(View.VISIBLE);
-        }
+        doPropertyAnimatorReveal(colorTo);
+        resultsContainer.setVisibility(View.VISIBLE);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
