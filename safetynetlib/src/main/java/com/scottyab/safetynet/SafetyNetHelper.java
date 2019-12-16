@@ -1,8 +1,6 @@
 package com.scottyab.safetynet;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -17,6 +15,8 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Simple wrapper to request google Play services - SafetyNet test

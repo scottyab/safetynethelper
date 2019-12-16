@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.scottyab.safetynet.SafetyNetResponse;
 import com.scottyab.safetynet.sample.R;
 
+import androidx.appcompat.app.AlertDialog;
 
 /**
  * extracting some of the boilerplate sample app code from the mainActivity.

@@ -1,7 +1,5 @@
 package com.scottyab.safetynet;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -9,6 +7,9 @@ import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * SafetyNet API payload Response (once unencoded from JSON Web token)
