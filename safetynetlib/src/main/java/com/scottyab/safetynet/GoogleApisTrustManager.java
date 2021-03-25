@@ -1,16 +1,12 @@
 package com.scottyab.safetynet;
 
 import android.util.Base64;
-import android.util.Log;
 
+import javax.net.ssl.X509TrustManager;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
-
-import javax.net.ssl.X509TrustManager;
 
 /**
  * Custom TrustManager to use SSL public key Pinning to verify connections to www.googleapis.com

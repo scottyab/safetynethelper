@@ -1,14 +1,13 @@
 package com.scottyab.safetynet;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
-
-import java.util.Arrays;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Arrays;
 
 /**
  * SafetyNet API payload Response (once unencoded from JSON Web token)
@@ -71,8 +70,8 @@ public class SafetyNetResponse {
 
     /**
      * SHA-256 hash of the app's APK
-     *
-     * Google Play since March 2018 adds a small amount of metadata to all apps which makes this apk validation less useful. 
+     * <p>
+     * Google Play since March 2018 adds a small amount of metadata to all apps which makes this apk validation less useful.
      *
      * @return BASE64 encoded
      */
