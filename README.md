@@ -94,7 +94,7 @@ then add a library dependency
 ```gradle
 
     dependencies {
-        compile 'com.github.scottyab:safetynethelper:0.5'
+        compile 'com.github.scottyab:safetynethelper:0.8'
     }
 ```
 
