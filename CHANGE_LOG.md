@@ -1,6 +1,6 @@
 Version
 
-0.5
+0.8
 ===
 
 * Update to Safety Net v17
@@ -10,9 +10,6 @@ Version
 
 Sample
 * Added Advice to result text
-
-0.4
-===
-
-* Update to Safety Net v15
 * Added support for Android/Google TV
+
+
