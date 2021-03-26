@@ -2,6 +2,8 @@ package com.scottyab.safetynet;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import org.json.JSONObject;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -16,10 +18,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-
-import org.json.JSONObject;
-
-import androidx.annotation.NonNull;
 
 /**
  * Validates the result with Android Device Verification API.

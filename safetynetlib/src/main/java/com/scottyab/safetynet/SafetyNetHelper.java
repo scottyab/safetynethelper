@@ -4,7 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
@@ -58,7 +59,7 @@ public class SafetyNetHelper {
     /**
      * @param googleDeviceVerificationApiKey used to validate safety net response see https://developer.android.com/google/play/safetynet/start.html#verify-compat-check
      */
-    public SafetyNetHelper(@Nullable String googleDeviceVerificationApiKey) {
+    public SafetyNetHelper(String googleDeviceVerificationApiKey) {
         this.googleDeviceVerificationApiKey = googleDeviceVerificationApiKey;
 
         assureApiKeysDefined();
@@ -88,7 +89,7 @@ public class SafetyNetHelper {
      * @param context                  used to build and init the GoogleApiClient
      * @param safetyNetWrapperCallback results and error handling
      */
-    public void requestTest(@NonNull final Context context, final SafetyNetWrapperCallback safetyNetWrapperCallback) {
+    public void requestTest(final Context context, final SafetyNetWrapperCallback safetyNetWrapperCallback) {
         packageName = context.getPackageName();
         callback = safetyNetWrapperCallback;
         apkCertificateDigests = Utils.calcApkCertificateDigests(context, packageName);

@@ -8,11 +8,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AlertDialog;
 import com.scottyab.safetynet.SafetyNetResponse;
 import com.scottyab.safetynet.sample.R;
-
-import androidx.appcompat.app.AlertDialog;
 
 /**
  * extracting some of the boilerplate sample app code from the mainActivity.

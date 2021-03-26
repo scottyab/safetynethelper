@@ -2,11 +2,9 @@ package com.scottyab.sateynet.sample;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.scottyab.safetynet.SafetyNetHelper;
@@ -26,9 +25,6 @@ import com.scottyab.safetynet.sample.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -151,13 +147,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void revealResults(Integer colorTo) {
         doPropertyAnimatorReveal(colorTo);
         resultsContainer.setVisibility(View.VISIBLE);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void doPropertyAnimatorReveal(Integer colorTo) {
         Integer colorFrom = Color.TRANSPARENT;
         Drawable background = resultsContainer.getBackground();
@@ -178,7 +172,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUIWithSuccessfulResult(SafetyNetResponse safetyNetResponse) {
-        resultsTV.setText(getString(R.string.safety_results, safetyNetResponse.isCtsProfileMatch(), safetyNetResponse.isBasicIntegrity()));
+        String advice = safetyNetResponse.getAdvice() == null ? "None availible" : safetyNetResponse.getAdvice();
+
+        resultsTV.setText(getString(R.string.safety_results,
+                safetyNetResponse.isCtsProfileMatch(),
+                safetyNetResponse.isBasicIntegrity(),
+                advice));
         resultNoteTV.setText(R.string.safety_results_note);
 
         successResultsContainer.setVisibility(View.VISIBLE);

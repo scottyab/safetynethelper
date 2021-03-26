@@ -27,7 +27,7 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 
 ## Requires / Dependencies
 
-* Google Play services 7+ (specifically the SafetyNet API 'com.google.android.gms:play-services-safetynet:10.0.1')
+* Google Play services (specifically the SafetyNet API 'com.google.android.gms:play-services-safetynet:17.0.0')
 * Requires Internet permission
 * Google API key for the [Android Device Verification API](https://developer.android.com/training/safetynet/index.html#verify-compat-check)
 
@@ -75,7 +75,7 @@ You'll need to get a **API key** from the Google developer console to allow you 
 
 ### Add as dependency
 
-This library is not _yet_ released in Maven Central, until then you can add as a library module or use [JitPack.io](https://jitpack.io/#scottyab/safetynethelper)
+This library is not released in Maven Central, until then you can add as a library module or use [JitPack.io](https://jitpack.io/#scottyab/safetynethelper)
 
 
 add remote maven url
@@ -94,7 +94,7 @@ then add a library dependency
 ```gradle
 
     dependencies {
-        compile 'com.github.scottyab:safetynethelper:0.3.0'
+        compile 'com.github.scottyab:safetynethelper:0.8'
     }
 ```
 
@@ -111,7 +111,7 @@ The sample app illustrates the helper library in practice. Test your own devices
 
 ##Licence
 
-	Copyright (c) 2015 Scott Alexander-Bown
+	Copyright (c) 2021 Scott Alexander-Bown
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

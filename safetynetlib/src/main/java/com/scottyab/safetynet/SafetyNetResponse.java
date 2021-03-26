@@ -1,15 +1,13 @@
 package com.scottyab.safetynet;
 
 import android.util.Log;
-
-import java.util.Arrays;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * SafetyNet API payload Response (once unencoded from JSON Web token)
