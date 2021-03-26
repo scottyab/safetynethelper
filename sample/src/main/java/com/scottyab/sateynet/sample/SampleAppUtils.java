@@ -12,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import com.scottyab.safetynet.SafetyNetResponse;
 import com.scottyab.safetynet.sample.R;
 
-
 /**
  * extracting some of the boilerplate sample app code from the mainActivity.
  */

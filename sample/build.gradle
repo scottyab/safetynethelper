@@ -7,10 +7,8 @@ android {
         applicationId 'com.scottyab.safetynet.sample'
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 7
-        versionName "0.7"
-
-        setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
+        versionCode 8
+        versionName "0.8"
 
     }
 

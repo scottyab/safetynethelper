@@ -2,6 +2,7 @@ package com.scottyab.safetynet;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import org.json.JSONObject;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -44,7 +45,7 @@ public class AndroidDeviceVerifier {
         void success(boolean isValidSignature);
     }
 
-    public AndroidDeviceVerifier(String apiKey, String signatureToVerify) {
+    public AndroidDeviceVerifier(@NonNull String apiKey, @NonNull String signatureToVerify) {
         this.apiKey = apiKey;
         this.signatureToVerify = signatureToVerify;
     }

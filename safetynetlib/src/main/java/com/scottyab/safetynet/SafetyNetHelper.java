@@ -16,6 +16,8 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Simple wrapper to request google Play services - SafetyNet test

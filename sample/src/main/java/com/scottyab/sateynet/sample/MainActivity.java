@@ -26,12 +26,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "SafetyNetHelperSAMPLE";
 
-    //*** REPLACE with your own!! ***
+    //*** TODO REPLACE with your own!! ***
     private static final String API_KEY = BuildConfig.GOOGLE_VERIFICATION_API_KEY;
     private View loading;
 

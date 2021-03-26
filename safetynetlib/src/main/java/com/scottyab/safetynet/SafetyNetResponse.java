@@ -70,8 +70,8 @@ public class SafetyNetResponse {
 
     /**
      * SHA-256 hash of the app's APK
-     * <p>
-     * Google Play since March 2018 adds a small amount of metadata to all apps which makes this apk validation less useful.
+     *
+     * Google Play since March 2018 adds a small amount of metadata to all apps which makes this apk validation less useful. 
      *
      * @return BASE64 encoded
      */
