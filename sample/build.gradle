@@ -7,7 +7,7 @@ android {
         applicationId 'com.scottyab.safetynet.sample'
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 8
+        versionCode 9
         versionName "0.8"
 
     }
