@@ -19,6 +19,7 @@ import java.util.Arrays;
  * "apkDigestSha256": "WN2ADq4LZvMsd0CFBIkGRl8bn3mRKIppCmnqsrJzUJg=",
  * "ctsProfileMatch": false,
  * "basicIntegrity": false,
+ * "evaluationType":"BASIC",
  * "extension": "CY+oATrcJ6Cr",
  * "apkCertificateDigestSha256": ["Yao6w7Yy7/ab2bNEygMbXqN9+16j8mLKKTCsUcU3Mzw="]
  * "advice": "LOCK_BOOTLOADER,RESTORE_TO_FACTORY_ROM"
@@ -35,6 +36,7 @@ public class SafetyNetResponse {
     private String apkDigestSha256;
     private boolean ctsProfileMatch;
     private boolean basicIntegrity;
+    private String evaluationType;
     private String advice;
 
     //forces the parse()
@@ -100,6 +102,15 @@ public class SafetyNetResponse {
     }
 
     /**
+     * The type of evaluation used to determine whether the device is secure
+     *
+     * @return
+     */
+    public String getEvaluationType() {
+        return evaluationType;
+    }
+
+    /**
      * Advice for passing future checks
      *
      * @return
@@ -153,6 +164,10 @@ public class SafetyNetResponse {
                 response.ctsProfileMatch = root.getBoolean("ctsProfileMatch");
             }
 
+            if (root.has("evaluationType")) {
+                response.evaluationType = root.getString("evaluationType");
+            }
+
             if (root.has("timestampMs")) {
                 response.timestampMs = root.getLong("timestampMs");
             }
@@ -179,6 +194,7 @@ public class SafetyNetResponse {
                 ", apkDigestSha256='" + apkDigestSha256 + '\'' +
                 ", ctsProfileMatch=" + ctsProfileMatch +
                 ", basicIntegrity=" + basicIntegrity +
+                ", evaluationType=" + evaluationType +
                 ", advice=" + advice +
                 '}';
     }
