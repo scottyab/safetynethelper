@@ -5,9 +5,9 @@ android {
     buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId 'com.scottyab.safetynet.sample'
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10
+        versionCode 11
         versionName "0.8"
 
         archivesBaseName = "SafetynetSample-$versionName-[$versionCode]"
