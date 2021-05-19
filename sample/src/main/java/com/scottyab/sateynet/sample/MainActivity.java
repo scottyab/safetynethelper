@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUIWithSuccessfulResult(SafetyNetResponse safetyNetResponse) {
-        String advice = safetyNetResponse.getAdvice() == null ? "None availible" : safetyNetResponse.getAdvice();
+        String advice = safetyNetResponse.getAdvice() == null ? "None available" : safetyNetResponse.getAdvice();
 
         resultsTV.setText(getString(R.string.safety_results,
                 safetyNetResponse.isCtsProfileMatch(),
