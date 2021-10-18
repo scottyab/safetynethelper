@@ -2,7 +2,6 @@ Version
 
 0.8
 ===
-
 * Update to Safety Net v17
 * Use Android X
 * Target Android SDK 30
