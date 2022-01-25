@@ -3,7 +3,7 @@
   <string name="action_settings">Settings</string>
   <string name="action_info">Info</string>
   <string name="info_details">This is a sample app for the SafetyNet \`attest\` Helper library.
-        Running the test will use the Google Play Services SafetyNet \`attest\` API to verify this device and ROM is has passed the Compatibility Test Suite (CTS). It also verifies the SafetyNet API is genuine by calling another Google verification API.</string>
+        Running the test will use the Google Play Services SafetyNet \`attest\` API to verify this device and ROM has passed the Compatibility Test Suite (CTS). It also verifies the SafetyNet API is genuine by calling another Google verification API.</string>
   <string name="action_share">Share</string>
   <string name="about_version">version %1$s [%2$d]</string>
   <string name="action_github">View code on GitHub</string>
