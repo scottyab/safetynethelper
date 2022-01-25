@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 8
-        versionName "0.8"
+        versionCode 9
+        versionName "0.9"
     }
     buildTypes {
         release {
@@ -23,5 +23,5 @@ android {
 }
 
 dependencies {
-    implementation ('com.google.android.gms:play-services-safetynet:17.0.0')
+    implementation('com.google.android.gms:play-services-safetynet:18.0.1')
 }
