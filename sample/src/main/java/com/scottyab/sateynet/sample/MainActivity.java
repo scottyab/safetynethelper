@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         resultsTV.setText(getString(R.string.safety_results,
                 safetyNetResponse.isCtsProfileMatch(),
                 safetyNetResponse.isBasicIntegrity(),
+                safetyNetResponse.getEvaluationType(),
                 advice));
         resultNoteTV.setText(R.string.safety_results_note);
 
