@@ -1,5 +1,9 @@
 Version
 
+0.9
+===
+* Update to Safety Net v18.0.1
+
 0.8
 ===
 * Update to Safety Net v17
