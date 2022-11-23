@@ -18,7 +18,7 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 *Since this library release Google has created an [Safety Net Sample](https://github.com/googlesamples/android-play-safetynet/tree/master/android/SafetyNetSample)
 
 
-##Features
+## Features
 
 * Calls Google play services Safety Net test
 * Local verification of request
@@ -31,7 +31,7 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 * Requires Internet permission
 * Google API key for the [Android Device Verification API](https://developer.android.com/training/safetynet/index.html#verify-compat-check)
 
-##Server Validation!!!
+## Server Validation!!!
 This library was built to get app developers up and going with SafetyNet attest API.
 With skill and time any device based checks can be bypassed. This is why the validation should be handled by the server. Therefore you should look at implementing more robust and secure validation of the `attest` response via a server-side component.
 
@@ -109,7 +109,7 @@ The sample app illustrates the helper library in practice. Test your own devices
 <img width="270" src="./art/sample_req_pass_validation_fail.png">
 
 
-##Licence
+## Licence
 
 	Copyright (c) 2021 Scott Alexander-Bown
 
