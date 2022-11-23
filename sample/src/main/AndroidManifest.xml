@@ -31,6 +31,10 @@
     android:name="android.hardware.sensor"
     android:required="false" />
 
+  <queries>
+    <package android:name="com.android.vending" />
+  </queries>
+
   <application
     android:allowBackup="true"
     android:banner="@mipmap/tv_banner"
