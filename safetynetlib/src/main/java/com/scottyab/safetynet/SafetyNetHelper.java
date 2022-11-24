@@ -32,7 +32,6 @@ public class SafetyNetHelper {
     public static final int SAFETY_NET_API_REQUEST_UNSUCCESSFUL = 999;
     public static final int RESPONSE_ERROR_VALIDATING_SIGNATURE = 1000;
     public static final int RESPONSE_FAILED_SIGNATURE_VALIDATION = 1002;
-    public static final int RESPONSE_FAILED_SIGNATURE_VALIDATION_NO_API_KEY = 1003;
     public static final int RESPONSE_VALIDATION_FAILED = 1001;
 
 
@@ -103,60 +102,33 @@ public class SafetyNetHelper {
         requestTimestamp = System.currentTimeMillis();
 
         SafetyNet.getClient(context).attest(requestNonce, googleDeviceVerificationApiKey)
-                .addOnSuccessListener(new OnSuccessListener<SafetyNetApi.AttestationResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.AttestationResponse attestationResponse) {
-                        final String jwsResult = attestationResponse.getJwsResult();
+                .addOnSuccessListener(attestationResponse -> {
+                    final String jwsResult = attestationResponse.getJwsResult();
 
-                        final SafetyNetResponse response = parseJsonWebSignature(jwsResult);
-                        lastResponse = response;
+                    final SafetyNetResponse response = parseJsonWebSignature(jwsResult);
+                    lastResponse = response;
 
-                        //only need to validate the response if it says we pass
-                        if (!response.isCtsProfileMatch() || !response.isBasicIntegrity()) {
-                            callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
-                            return;
+                    //only need to validate the response if it says we pass
+                    if (!response.isCtsProfileMatch() || !response.isBasicIntegrity()) {
+                        callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
+                        return;
+                    } else {
+                        //validate payload of the response
+                        if (validateSafetyNetResponsePayload(response)) {
+                             callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
                         } else {
-                            //validate payload of the response
-                            if (validateSafetyNetResponsePayload(response)) {
-                                if (!TextUtils.isEmpty(googleDeviceVerificationApiKey)) {
-                                    //if the api key is set, run the AndroidDeviceVerifier
-                                    AndroidDeviceVerifier androidDeviceVerifier = new AndroidDeviceVerifier(googleDeviceVerificationApiKey, jwsResult);
-                                    androidDeviceVerifier.verify(new AndroidDeviceVerifier.AndroidDeviceVerifierCallback() {
-                                        @Override
-                                        public void error(String errorMsg) {
-                                            callback.error(RESPONSE_ERROR_VALIDATING_SIGNATURE, "Response signature validation error: " + errorMsg);
-                                        }
-
-                                        @Override
-                                        public void success(boolean isValidSignature) {
-                                            if (isValidSignature) {
-                                                callback.success(response.isCtsProfileMatch(), response.isBasicIntegrity());
-                                            } else {
-                                                callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION, "Response signature invalid");
-
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    Log.w(TAG, "No google Device Verification ApiKey defined");
-                                    callback.error(RESPONSE_FAILED_SIGNATURE_VALIDATION_NO_API_KEY, "No Google Device Verification ApiKey defined. Marking as failed. SafetyNet CtsProfileMatch: " + response.isCtsProfileMatch());
-                                }
-                            } else {
-                                callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
-                            }
+                            callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
                         }
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        if (e instanceof ApiException) {
-                            ApiException apiException = (ApiException) e;
-                            callback.error(RESPONSE_VALIDATION_FAILED, "ApiException[" + apiException.getStatusCode() + "] " + apiException.getMessage());
-                        } else {
-                            Log.d(TAG, "Error: " + e.getMessage());
-                            callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
-                        }
+                .addOnFailureListener(e -> {
+                    if (e instanceof ApiException) {
+                        // when there's a network error this message is poor.
+                        ApiException apiException = (ApiException) e;
+                        callback.error(RESPONSE_VALIDATION_FAILED, "ApiException[" + apiException.getStatusCode() + "] " + apiException.getMessage());
+                    } else {
+                        Log.d(TAG, "Error: " + e.getMessage());
+                        callback.error(RESPONSE_VALIDATION_FAILED, "Response payload validation failed");
                     }
                 });
     }

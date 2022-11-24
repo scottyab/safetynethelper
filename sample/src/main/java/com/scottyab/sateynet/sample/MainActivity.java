@@ -75,12 +75,7 @@ public class MainActivity extends AppCompatActivity {
         loading = findViewById(R.id.loading);
         resultsIcon = findViewById(R.id.resultIcon);
 
-        findViewById(R.id.runTestButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                runTest();
-            }
-        });
+        findViewById(R.id.runTestButton).setOnClickListener(v -> runTest());
     }
 
     private void runTest() {
