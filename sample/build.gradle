@@ -1,12 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 33
     defaultConfig {
         applicationId 'com.scottyab.safetynet.sample'
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 12
         versionName "0.8"
 
@@ -17,6 +16,8 @@ android {
     String GOOGLE_VERIFICATION_API_KEY = ""
     if (project.hasProperty("SAFETY_NET_DEVICE_VERIFICATION_API_KEY")) {
         GOOGLE_VERIFICATION_API_KEY = SAFETY_NET_DEVICE_VERIFICATION_API_KEY
+    } else {
+        print("Warning: SAFETY_NET_DEVICE_VERIFICATION_API_KEY not found")
     }
 
     //check if the keystore details are defined in gradle.properties (this is so the key is not in github)
@@ -30,6 +31,8 @@ android {
                 keyPassword SAFETY_NET_KEY_PASS
             }
         }
+    } else{
+      print("Warning: SAFETY_NET_FILE not found")
     }
 
     buildTypes {
@@ -63,6 +66,6 @@ dependencies {
     //testing the jitlab dependancy
     //compile 'com.github.scottyab:safetynethelper:0.1.0@aar'
 
-    implementation "com.google.android.material:material:1.4.0"
-    implementation 'com.google.android.gms:play-services-base:18.0.1'
+    implementation "com.google.android.material:material:1.7.0"
+    implementation 'com.google.android.gms:play-services-base:18.1.0'
 }
