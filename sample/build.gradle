@@ -7,7 +7,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 13
-        versionName "0.9"
+        versionName "0.10.0"
 
         archivesBaseName = "SafetynetSample-$versionName-[$versionCode]"
     }
