@@ -120,9 +120,6 @@ public class SafetyNetHelper {
                 });
     }
 
-
-
-
     /**
      * Gets the previous successful call to the safetynetAPI - this is mainly for debug purposes.
      *

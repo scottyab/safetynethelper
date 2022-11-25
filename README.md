@@ -47,7 +47,6 @@ With skill and time any device based checks can be bypassed. This is why the val
 You'll need to get a **API key** from the Google developer console to allow you to verify with the Android Device Verification API (in the sample project this is set via a BuildConfig field to keep my api key out of GitHub)
 
 ```java
-
     final SafetyNetHelper safetyNetHelper = new SafetyNetHelper(API_KEY);
 
     safetyNetHelper.requestTest(context, new SafetyNetHelper.SafetyNetWrapperCallback() {
@@ -91,7 +90,7 @@ then add a library dependency
 ```gradle
 
     dependencies {
-        compile 'com.github.scottyab:safetynethelper:0.8'
+        compile 'com.github.scottyab:safetynethelper:<latest version>'
     }
 ```
 
