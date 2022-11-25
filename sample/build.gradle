@@ -6,15 +6,15 @@ android {
         applicationId 'com.scottyab.safetynet.sample'
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 12
-        versionName "0.8"
+        versionCode 13
+        versionName "0.10.0"
 
         archivesBaseName = "SafetynetSample-$versionName-[$versionCode]"
     }
 
     //check if SAFETY_NET_DEVICE_VERIFICATION_API_KEY is defined in gradle.properties (this is so the key is not in github)
     String GOOGLE_VERIFICATION_API_KEY = ""
-    if (project.hasProperty("SAFETY_NET_DEVICE_VERIFICATION_API_KEY")) {
+    if (project.hasProperty("SAFETY_NET_DEVICE_VERIFICATION_API_KEY") ) {
         GOOGLE_VERIFICATION_API_KEY = SAFETY_NET_DEVICE_VERIFICATION_API_KEY
     } else {
         print("Warning: SAFETY_NET_DEVICE_VERIFICATION_API_KEY not found")

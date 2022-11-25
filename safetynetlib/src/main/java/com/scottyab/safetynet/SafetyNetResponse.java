@@ -139,13 +139,11 @@ public class SafetyNetResponse {
 
             if (root.has("apkCertificateDigestSha256")) {
                 JSONArray jsonArray = root.getJSONArray("apkCertificateDigestSha256");
-                if (jsonArray != null) {
-                    String[] certDigests = new String[jsonArray.length()];
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        certDigests[i] = jsonArray.getString(i);
-                    }
-                    response.apkCertificateDigestSha256 = certDigests;
+                String[] certDigests = new String[jsonArray.length()];
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    certDigests[i] = jsonArray.getString(i);
                 }
+                response.apkCertificateDigestSha256 = certDigests;
             }
 
             if (root.has("apkDigestSha256")) {

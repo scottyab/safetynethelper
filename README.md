@@ -7,15 +7,13 @@ SafetyNet Helper wraps the Google Play Services SafetyNet.API and verifies Safet
 
 **Recommend reading the developers guide to getting started with [SafetyNet](https://developer.android.com/google/play/safetynet/start.html)**
 
-
 ![](./sample/src/main/res/mipmap-xxhdpi/ic_launcher.png)
-
 
 Extract from Android [SafetyNet API doc](https://developer.android.com/google/play/safetynet/index.html)
 
 *Check if your app is running on a device that matches a device model that has passed Android compatibility testing. This analysis can help you determine if your app will work as expected on the device where it is installed. The service evaluates both software and hardware characteristics of the device, and may use hardware roots of trust, when available.*
 
-*Since this library release Google has created an [Safety Net Sample](https://github.com/googlesamples/android-play-safetynet/tree/master/android/SafetyNetSample)
+Since this library release Google has created an [Safety Net Sample](https://github.com/googlesamples/android-play-safetynet/tree/master/android/SafetyNetSample)
 
 
 ## Features
@@ -33,24 +31,22 @@ Extract from Android [SafetyNet API doc](https://developer.android.com/google/pl
 
 ## Server Validation!!!
 This library was built to get app developers up and going with SafetyNet attest API.
-With skill and time any device based checks can be bypassed. This is why the validation should be handled by the server. Therefore you should look at implementing more robust and secure validation of the `attest` response via a server-side component.
+
+With skill and time any device based checks can be bypassed. This is why the validation *must* be handled by the server. Therefore you should look at implementing more robust and secure validation of the `attest` response via a server-side component.
 
 * App requests the nonce / request token from your server
-* Call `SafetyNet.SafetyNetApi.attest(googleApiClient, requestNonce)
-* Pass the JWT response from SafetyNet API to your server for validation (the same validation check which this library completes)
-	* Check the nonce/request token matches the expected value
-	* verify the SafetyNet response is from Google using the Android Device Verification API
-	* verify app package, timestamp, apk and certificate digests
-
-If verification fails then at least your server would know if the device (and app installation) was compromised and take appropriate action e.g revoking OAUTH tokens.
-
+* Call `SafetyNet.getClient(context).attest(requestNonce, apiKey)`
+* When the Pass the `JwsResult` returned as part of the SafetyNet success response to your server for validation i.e 
+    * Check the nonce/request token matches the expected value
+    * verify the SafetyNet response is from Google using the Android Device Verification API
+    * verify app package, timestamp, apk and certificate digests
+* Based on the validation result your server can choose whether to trust the app install. The action you take is dependent on your app, you could  log the user out by revoking OAUTH tokens or flag any high scores as potential cheating.   
 
 ## How to use
 
 You'll need to get a **API key** from the Google developer console to allow you to verify with the Android Device Verification API (in the sample project this is set via a BuildConfig field to keep my api key out of GitHub)
 
 ```java
-
     final SafetyNetHelper safetyNetHelper = new SafetyNetHelper(API_KEY);
 
     safetyNetHelper.requestTest(context, new SafetyNetHelper.SafetyNetWrapperCallback() {
@@ -94,7 +90,7 @@ then add a library dependency
 ```gradle
 
     dependencies {
-        compile 'com.github.scottyab:safetynethelper:0.8'
+        compile 'com.github.scottyab:safetynethelper:<latest version>'
     }
 ```
 
@@ -111,7 +107,7 @@ The sample app illustrates the helper library in practice. Test your own devices
 
 ## Licence
 
-	Copyright (c) 2021 Scott Alexander-Bown
+	Copyright (c) 2022 Scott Alexander-Bown
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
