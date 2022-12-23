@@ -168,12 +168,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUIWithSuccessfulResult(SafetyNetResponse safetyNetResponse) {
         String advice = safetyNetResponse.getAdvice() == null ? "None available" : safetyNetResponse.getAdvice();
+        String deprecationInformation = safetyNetResponse.getDeprecationInformation() == null ? "None available" : safetyNetResponse.getDeprecationInformation();
 
         resultsTV.setText(getString(R.string.safety_results,
                 safetyNetResponse.isCtsProfileMatch(),
                 safetyNetResponse.isBasicIntegrity(),
                 safetyNetResponse.getEvaluationType(),
-                advice));
+                advice,
+                deprecationInformation));
         resultNoteTV.setText(R.string.safety_results_note);
 
         successResultsContainer.setVisibility(View.VISIBLE);
