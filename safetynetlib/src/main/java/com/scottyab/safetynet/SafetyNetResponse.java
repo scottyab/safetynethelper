@@ -38,6 +38,7 @@ public class SafetyNetResponse {
     private boolean basicIntegrity;
     private String evaluationType;
     private String advice;
+    private String deprecationInformation;
 
     //forces the parse()
     private SafetyNetResponse() {
@@ -120,6 +121,15 @@ public class SafetyNetResponse {
     }
 
     /**
+     * Info about SN API Deprecation
+     *
+     * @return
+     */
+    public String getDeprecationInformation() {
+        return deprecationInformation;
+    }
+
+    /**
      * Parse the JSON string into populated SafetyNetResponse object
      *
      * @param decodedJWTPayload JSON String (always a json string according to JWT spec)
@@ -174,6 +184,10 @@ public class SafetyNetResponse {
                 response.advice = root.getString("advice");
             }
 
+            if (root.has("deprecationInformation")) {
+                response.deprecationInformation = root.getString("deprecationInformation");
+            }
+
             return response;
         } catch (JSONException e) {
             Log.e(TAG, "problem parsing decodedJWTPayload:" + e.getMessage(), e);
@@ -194,6 +208,7 @@ public class SafetyNetResponse {
                 ", basicIntegrity=" + basicIntegrity +
                 ", evaluationType=" + evaluationType +
                 ", advice=" + advice +
+                ", deprecationInformation=" + deprecationInformation +
                 '}';
     }
 
